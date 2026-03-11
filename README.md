@@ -25,10 +25,10 @@ This will pick up the Ruby and Node versions from the `.ruby-version` and `.node
 
 ### Setup
 
-Clone the repo and run the setup script:
+Fork the repo to your own GitHub account, then clone your fork and run the setup script:
 
 ```bash
-git clone <repo-url>
+git clone <your-fork-url>
 cd product-design-exercise
 bin/setup
 ```
@@ -53,3 +53,14 @@ Open [PITCH.md](PITCH.md) first. It explains the two exercise tracks that now li
 Use the track your interviewer assigns. Both briefs build on the same baseline app and existing bookmark toggle.
 
 Take a look around the app first. Create some posts, bookmark a few, and get a feel for how things work before diving in.
+
+## Submission
+
+Please complete the exercise in your own fork of this repository.
+
+- Fork this repo to your GitHub account
+- Create a branch in your fork for your work
+- Build the assigned exercise track in that fork
+- Open a pull request with your changes when you're done
+
+That pull request is the submission we will review. Please use the PR description to include any assumptions, tradeoffs, open questions, or follow-up ideas that would help us understand your decisions.
