@@ -1,0 +1,12 @@
+<% if bookmark %>
+  <div class="border rounded-3 bg-body-tertiary p-4 mb-4">
+    <%# Editing only renames existing bookmarks here; the bookmark toggle stays on browse surfaces. %>
+    <%= label_tag "bookmark_name", "Bookmark name", class: "form-label" %>
+    <%= text_field_tag "bookmark[name]", bookmark.name, maxlength: 80, class: "form-control", placeholder: post.title, id: "bookmark_name", form: post_form_id %>
+    <div class="form-text">Leave blank to use the original post title.</div>
+
+    <% if bookmark.errors[:name].any? %>
+      <div class="text-danger small mt-2"><%= bookmark.errors.full_messages_for(:name).to_sentence %></div>
+    <% end %>
+  </div>
+<% end %>

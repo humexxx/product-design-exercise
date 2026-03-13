@@ -29,3 +29,8 @@
     </div>
   <% end %>
 </div>
+
+<%# Keep new content first; bookmarks live below recent posts so home stays useful without feeling dominated by saved items. %>
+<div id="homepage_bookmarks">
+  <%= render "bookmarks_list", bookmarks: @bookmarks, editing_bookmark: nil %>
+</div>

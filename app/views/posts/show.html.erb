@@ -1,6 +1,13 @@
 <div class="mb-4">
   <div class="d-flex justify-content-between align-items-start mb-3">
-    <h1><%= @post.title %></h1>
+    <div>
+      <h1 class="mb-1"><%= @bookmark&.display_name || @post.title %></h1>
+
+      <% if @bookmark&.name.present? %>
+        <div class="text-muted small">Original title: <%= @post.title %></div>
+      <% end %>
+    </div>
+
     <%= render "posts/bookmark_button", post: @post %>
   </div>
 

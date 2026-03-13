@@ -1,3 +1,6 @@
 <h1 class="mb-4">Edit Post</h1>
 
-<%= render "form", post: @post %>
+<% post_form_id = dom_id(@post, :edit_form) %>
+
+<%= render "bookmark_panel", post: @post, bookmark: @bookmark, post_form_id: post_form_id %>
+<%= render "form", post: @post, bookmark: @bookmark, form_id: post_form_id %>

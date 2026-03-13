@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   root "pages#home"
 
   resources :posts do
-    resource :bookmark, only: [ :create, :destroy ], module: :posts
+    resource :bookmark, only: [ :show, :create, :edit, :update, :destroy ], module: :posts do
+      patch :move_up
+      patch :move_down
+    end
   end
 end

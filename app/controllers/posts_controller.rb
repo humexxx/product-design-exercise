@@ -26,7 +26,15 @@ class PostsController < ApplicationController
   end
 
   def update
-    if @post.update(post_params)
+    @post.assign_attributes(post_params)
+    @bookmark&.assign_attributes(bookmark_params)
+
+    if @post.valid? && bookmark_valid?
+      ActiveRecord::Base.transaction do
+        @post.save!
+        @bookmark&.save!
+      end
+
       redirect_to @post, notice: "Post was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -41,10 +49,23 @@ class PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.includes(:bookmarks).find(params[:id])
+    @bookmark = @post.bookmarks.first
   end
 
   def post_params
     params.expect(post: [ :title, :body ])
+  end
+
+  def bookmark_params
+    return {} unless params[:bookmark]
+
+    params.expect(bookmark: [ :name ])
+  end
+
+  def bookmark_valid?
+    return true unless @bookmark
+
+    @bookmark.valid?
   end
 end
