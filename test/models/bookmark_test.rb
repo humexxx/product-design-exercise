@@ -48,4 +48,15 @@ class BookmarkTest < ActiveSupport::TestCase
 
     assert_equal "Read this later", bookmark.display_name
   end
+
+  test "compacts positions after a bookmark is removed" do
+    first_bookmark = Post.create!(title: "First", body: "Body").bookmarks.create!
+    second_bookmark = Post.create!(title: "Second", body: "Body").bookmarks.create!
+    third_bookmark = Post.create!(title: "Third", body: "Body").bookmarks.create!
+
+    second_bookmark.destroy!
+    Bookmark.compact_positions!
+
+    assert_equal [ [ first_bookmark.id, 1 ], [ third_bookmark.id, 2 ] ], Bookmark.ordered.pluck(:id, :position)
+  end
 end

@@ -18,17 +18,18 @@ module Posts
 
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to @post }
+        format.html { redirect_back fallback_location: edit_post_path(@post), notice: "Bookmark added." }
       end
     end
 
     def destroy
       @bookmark.destroy!
+      Bookmark.compact_positions!
       set_homepage_bookmarks
 
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to @post }
+        format.html { redirect_back fallback_location: edit_post_path(@post), notice: "Bookmark removed." }
       end
     end
 
@@ -58,7 +59,7 @@ module Posts
 
         respond_to do |format|
           format.turbo_stream { render_homepage_bookmarks }
-          format.html { redirect_back fallback_location: root_path, notice: "Bookmark renamed." }
+          format.html { redirect_back fallback_location: @post, notice: "Bookmark renamed." }
         end
       else
         set_homepage_bookmarks
@@ -66,7 +67,7 @@ module Posts
 
         respond_to do |format|
           format.turbo_stream { render_homepage_bookmarks status: :unprocessable_entity }
-          format.html { redirect_back fallback_location: root_path, alert: @bookmark.errors.full_messages.to_sentence }
+          format.html { render "posts/edit", status: :unprocessable_entity }
         end
       end
     end

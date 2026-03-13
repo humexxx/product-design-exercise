@@ -22,6 +22,14 @@ class Bookmark < ApplicationRecord
     name.presence || bookmarkable.title
   end
 
+  def self.compact_positions!
+    ordered.each.with_index(1) do |bookmark, index|
+      next if bookmark.position == index
+
+      bookmark.update_columns(position: index)
+    end
+  end
+
   private
 
   def assign_position

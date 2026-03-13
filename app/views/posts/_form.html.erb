@@ -1,4 +1,7 @@
-<%= form_with(model: post, class: "mb-3") do |form| %>
+<% bookmark = local_assigns.fetch(:bookmark, nil) %>
+<% form_id = local_assigns.fetch(:form_id, nil) %>
+
+<%= form_with(model: post, class: "mb-3", html: { id: form_id }) do |form| %>
   <% if post.errors.any? %>
     <div class="alert alert-danger">
       <h4 class="alert-heading"><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h4>
