@@ -23,6 +23,7 @@ class Bookmark < ApplicationRecord
   end
 
   def self.compact_positions!
+    # Collapse gaps after deletes so move controls stay predictable.
     ordered.each.with_index(1) do |bookmark, index|
       next if bookmark.position == index
 
@@ -33,10 +34,12 @@ class Bookmark < ApplicationRecord
   private
 
   def assign_position
+    # Re-added bookmarks append to the end instead of trying to restore stale positions.
     self.position ||= (self.class.maximum(:position) || 0) + 1
   end
 
   def normalize_name
+    # Custom names stay optional; blank input falls back to the original post title.
     self.name = name.to_s.strip.presence
   end
 

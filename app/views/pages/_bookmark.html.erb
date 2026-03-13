@@ -3,6 +3,7 @@
 <div class="list-group-item py-3">
   <div class="d-flex justify-content-between align-items-start gap-3">
     <div class="d-flex flex-column flex-shrink-0">
+      <%# Simple move controls keep manual ordering explicit without the scope of drag-and-drop. %>
       <%= button_to move_up_post_bookmark_path(post), method: :patch, disabled: index.zero?, class: "btn btn-link text-muted p-0 lh-1 border-0", form_class: "d-inline" do %>
         <i class="bi bi-arrow-up-circle fs-6"></i>
         <span class="visually-hidden">Move <%= bookmark.display_name %> up</span>
