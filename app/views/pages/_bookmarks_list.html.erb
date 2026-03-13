@@ -1,3 +1,5 @@
+<% editing_bookmark ||= nil %>
+
 <% if bookmarks.any? %>
   <hr class="my-5">
 
@@ -8,36 +10,11 @@
 
   <div class="list-group">
     <% bookmarks.each_with_index do |bookmark, index| %>
-      <% post = bookmark.bookmarkable %>
-
-      <div class="list-group-item py-3">
-        <div class="d-flex justify-content-between align-items-start gap-3">
-          <%= link_to post, class: "text-decoration-none flex-grow-1" do %>
-            <div class="fw-semibold text-dark"><%= post.title %></div>
-            <div class="text-muted small mt-1"><%= truncate(post.body, length: 120) %></div>
-            <small class="text-muted d-block mt-2">Saved <%= time_ago_in_words(bookmark.created_at) %> ago</small>
-          <% end %>
-
-          <div class="d-flex align-items-center gap-2 flex-shrink-0">
-            <div class="d-flex flex-column">
-              <%= button_to move_up_post_bookmark_path(post), method: :patch, disabled: index.zero?, class: "btn btn-link text-muted p-0 lh-1 border-0", form_class: "d-inline" do %>
-                <i class="bi bi-arrow-up-circle fs-6"></i>
-                <span class="visually-hidden">Move <%= post.title %> up</span>
-              <% end %>
-
-              <%= button_to move_down_post_bookmark_path(post), method: :patch, disabled: index == bookmarks.size - 1, class: "btn btn-link text-muted p-0 lh-1 border-0", form_class: "d-inline" do %>
-                <i class="bi bi-arrow-down-circle fs-6"></i>
-                <span class="visually-hidden">Move <%= post.title %> down</span>
-              <% end %>
-            </div>
-
-            <%= button_to post_bookmark_path(post), method: :delete, class: "btn btn-link text-warning p-0 flex-shrink-0", form_class: "d-inline" do %>
-              <i class="bi bi-bookmark-fill fs-5"></i>
-              <span class="visually-hidden">Remove bookmark for <%= post.title %></span>
-            <% end %>
-          </div>
-        </div>
-      </div>
+      <% if editing_bookmark == bookmark %>
+        <%= render "pages/bookmark_edit_form", bookmark: bookmark %>
+      <% else %>
+        <%= render "pages/bookmark", bookmark: bookmark, index: index, total_count: bookmarks.size %>
+      <% end %>
     <% end %>
   </div>
 <% end %>

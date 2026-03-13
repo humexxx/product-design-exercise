@@ -3,5 +3,5 @@
 <% end %>
 
 <%= turbo_stream.update "homepage_bookmarks" do %>
-  <%= render "pages/bookmarks_list", bookmarks: @bookmarks %>
+  <%= render "pages/bookmarks_list", bookmarks: @bookmarks, editing_bookmark: nil %>
 <% end %>

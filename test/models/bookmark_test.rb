@@ -29,4 +29,23 @@ class BookmarkTest < ActiveSupport::TestCase
 
     assert_equal [ second_bookmark.id, first_bookmark.id ], Bookmark.ordered.pluck(:id)
   end
+
+  test "display_name falls back to the post title" do
+    bookmark = Post.create!(title: "Fallback title", body: "Body").bookmarks.create!
+
+    assert_equal "Fallback title", bookmark.display_name
+  end
+
+  test "normalizes blank names to nil" do
+    bookmark = Post.create!(title: "Original title", body: "Body").bookmarks.create!(name: "   ")
+
+    assert_nil bookmark.name
+    assert_equal "Original title", bookmark.display_name
+  end
+
+  test "uses the custom name when present" do
+    bookmark = Post.create!(title: "Original title", body: "Body").bookmarks.create!(name: "Read this later")
+
+    assert_equal "Read this later", bookmark.display_name
+  end
 end

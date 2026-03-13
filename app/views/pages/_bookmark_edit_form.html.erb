@@ -1,0 +1,20 @@
+<% post = bookmark.bookmarkable %>
+
+<div class="list-group-item py-3 bg-light-subtle">
+  <%= form_with model: bookmark, url: post_bookmark_path(post), method: :patch, class: "d-flex justify-content-between align-items-start gap-3" do |form| %>
+    <div class="flex-grow-1">
+      <%= form.label :name, "Bookmark name", class: "form-label small text-muted mb-1" %>
+      <%= form.text_field :name, value: bookmark.name, maxlength: 80, class: "form-control", placeholder: post.title, autofocus: true %>
+      <div class="form-text">Leave blank to use the original post title.</div>
+
+      <% if bookmark.errors[:name].any? %>
+        <div class="text-danger small mt-2"><%= bookmark.errors.full_messages_for(:name).to_sentence %></div>
+      <% end %>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 flex-shrink-0 mt-4">
+      <%= form.submit "Save", class: "btn btn-dark" %>
+      <%= link_to "Cancel", post_bookmark_path(post), data: { turbo_stream: true }, class: "btn btn-outline-secondary" %>
+    </div>
+  <% end %>
+</div>

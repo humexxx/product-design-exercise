@@ -4,9 +4,11 @@ class Bookmark < ApplicationRecord
   scope :ordered, -> { order(:position, :created_at) }
   scope :posts, -> { where(bookmarkable_type: "Post") }
 
+  validates :name, length: { maximum: 80 }, allow_nil: true
   validates :position, presence: true, uniqueness: true
 
   before_validation :assign_position, on: :create
+  before_validation :normalize_name
 
   def move_higher!
     move_by(-1)
@@ -16,10 +18,18 @@ class Bookmark < ApplicationRecord
     move_by(1)
   end
 
+  def display_name
+    name.presence || bookmarkable.title
+  end
+
   private
 
   def assign_position
     self.position ||= (self.class.maximum(:position) || 0) + 1
+  end
+
+  def normalize_name
+    self.name = name.to_s.strip.presence
   end
 
   def move_by(offset)

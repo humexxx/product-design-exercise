@@ -1,7 +1,16 @@
 module Posts
   class BookmarksController < ApplicationController
     before_action :set_post
-    before_action :set_bookmark, only: [ :move_up, :move_down ]
+    before_action :set_bookmark, only: [ :show, :edit, :update, :destroy, :move_up, :move_down ]
+
+    def show
+      set_homepage_bookmarks
+
+      respond_to do |format|
+        format.turbo_stream { render_homepage_bookmarks }
+        format.html { redirect_back fallback_location: root_path }
+      end
+    end
 
     def create
       @bookmark = @post.bookmarks.create!
@@ -14,7 +23,7 @@ module Posts
     end
 
     def destroy
-      @post.bookmarks.destroy_all
+      @bookmark.destroy!
       set_homepage_bookmarks
 
       respond_to do |format|
@@ -30,6 +39,35 @@ module Posts
       respond_to do |format|
         format.turbo_stream { render_homepage_bookmarks }
         format.html { redirect_back fallback_location: root_path }
+      end
+    end
+
+    def edit
+      set_homepage_bookmarks
+      @editing_bookmark = @bookmark
+
+      respond_to do |format|
+        format.turbo_stream { render_homepage_bookmarks }
+        format.html { redirect_back fallback_location: root_path }
+      end
+    end
+
+    def update
+      if @bookmark.update(bookmark_params)
+        set_homepage_bookmarks
+
+        respond_to do |format|
+          format.turbo_stream { render_homepage_bookmarks }
+          format.html { redirect_back fallback_location: root_path, notice: "Bookmark renamed." }
+        end
+      else
+        set_homepage_bookmarks
+        @editing_bookmark = @bookmark
+
+        respond_to do |format|
+          format.turbo_stream { render_homepage_bookmarks status: :unprocessable_entity }
+          format.html { redirect_back fallback_location: root_path, alert: @bookmark.errors.full_messages.to_sentence }
+        end
       end
     end
 
@@ -53,16 +91,20 @@ module Posts
       @bookmark = @post.bookmarks.sole
     end
 
+    def bookmark_params
+      params.expect(bookmark: [ :name ])
+    end
+
     def set_homepage_bookmarks
       @bookmarks = Bookmark.posts.includes(:bookmarkable).ordered
     end
 
-    def render_homepage_bookmarks
+    def render_homepage_bookmarks(status: :ok)
       render turbo_stream: turbo_stream.update(
         "homepage_bookmarks",
         partial: "pages/bookmarks_list",
-        locals: { bookmarks: @bookmarks }
-      )
+        locals: { bookmarks: @bookmarks, editing_bookmark: @editing_bookmark }
+      ), status: status
     end
   end
 end
